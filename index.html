@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TO DO LIST</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  </head>
+  <body style="background-color: #daad86;">
+    <h1 class="text-center" style="color:#05386B">To Do List</h1>
+    <div class="row mx-3">
+    <div class="container col-5 ms-3 " style="width: 400px;">
+        
+            <div class="mb-3">
+              <label for="exampleInputTask" class="form-label" style="color: #05386B; font-size: 20px; font-weight: bold;" >Add Title</label>
+              <input type="addTask" class="form-control" id="taskTitle"  >
+              <div id="emailHelp" class="form-text" style=" color:#edf5e1;">Add your Task to the list</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label" style="color: #05386B; font-size: 20px; font-weight: bold;">Description</label>   
+                <textarea class="form-control" aria-label="With textarea" id="description" ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="add" style="background-color: #05386B; border:none;">Add</button>
+            <button type="submit" class="btn btn-primary" id="add" style="background-color: #05386B; border:none;" onclick="clearl()">Clear List</button>
+         
+    </div>
+          <div class="container col-6" >
+          <h2 class="mt-3" style="color: #05386B; font-size: 25px; font-weight: bold; ">Your List</h2>
+          <table class="table table-striped " style="background-color: #d4a881; border: solid #05386B 1px;">
+                <thead>
+                  <tr style="color: #05386B;">
+                    <th scope="col" >Sr.no</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  <tr style="color:#edf5e1">
+                    <th scope="row">1</th>
+                    <td>Go to Library</td>
+                    <td>Issue maths book</td>
+                    <td><button type="submit" class="btn btn-primary" id="deleteB" style="background-color: #05386B;  border:none;">Delete</button></td>
+                    <td><button type="submit" class="btn btn-primary" id="liveToastBtn" style="background-color: #05386B;  border:none;" >Modify</button></td>
+                  </tr>
+                </tbody>
+          </table>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto">Modify</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      
+      <div class="mb-1">
+        <label for="exampleInputTask" class="form-label"  >Your Title</label>
+        <input type="addTask" class="form-control" id="TitleM"  >
+      </div>
+
+      <div class="mb-1">
+        <label for="exampleInputPassword1" class="form-label">Description</label>   
+          <textarea class="form-control" aria-label="With textarea" id="descriptionM" ></textarea>
+      </div>
+
+      <button type="button" class="btn btn-primary" id="DoneM">Done</button>
+    </div>
+  </div>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <script>
+       
+        update();
+       function getupdate(){
+        console.log("updating List...");
+           t=document.getElementById("taskTitle").value;
+           d=document.getElementById("description").value;
+           if(localStorage.getItem('itemsJson')==null){
+            itemJsonarr=[];
+            itemJsonarr.push([t, d]);
+            localStorage.setItem('itemsJson', JSON.stringify(itemJsonarr));
+            localStorage.getItem(itemJsonarr);
+           }
+           else{
+            itemJsonstring=localStorage.getItem('itemsJson');
+            itemJsonarr=JSON.parse(itemJsonstring);
+            itemJsonarr.push([t,d]);
+            localStorage.setItem('itemsJson', JSON.stringify(itemJsonarr));
+           }
+            update();
+       }
+
+
+       function update(){
+           console.log("I am in update");
+        if(localStorage.getItem('itemsJson')==null){
+            itemJsonarr=[];
+            localStorage.setItem('itemsJson', JSON.stringify(itemJsonarr));
+           }
+           else{
+            itemJsonstring=localStorage.getItem('itemsJson');
+            itemJsonarr=JSON.parse(itemJsonstring);
+           }
+          
+           let TableBody=document.getElementById("tableBody");
+           str="";
+           itemJsonarr.forEach((element,index)=> {
+            str+=`
+            <tr style="color: #05386B;">
+                    <th style="color: #05386B;"scope="row">${index+1}</th>
+                    <td style="color: #05386B;">${element[0]}</td>
+                    <td style="color: #05386B;">${element[1]}</td>
+                    <td><button type="submit" class="btn btn-primary" onclick="deleteb(${index})" style="background-color: #05386B;  border:none;">Delete</button>
+                      <button type="submit" class="btn btn-primary" id="liveToastBtn" onclick="modifyC(${index})" style="background-color: #05386B;  border:none;">Modify</button></td>
+                    
+                  </tr>
+          `
+           });
+           TableBody.innerHTML=str;
+       }
+
+        add=document.getElementById("add");
+        add.addEventListener("click",getupdate);
+
+        function deleteb(item){
+          console.log("Delete", item);
+          itemJsonstring=localStorage.getItem('itemsJson');
+          itemJsonarr=JSON.parse(itemJsonstring);
+
+          itemJsonarr.splice(item,1);
+          localStorage.setItem('itemsJson', JSON.stringify(itemJsonarr));
+          update();
+
+        }
+
+        function clearl(item){
+          if(confirm("Do your really want to delete your list")){
+            localStorage.clear();
+            update();
+          }
+        }
+      
+        function modifyC(item){
+        toastLiveExample = document.getElementById('liveToast');    
+        toast = new bootstrap.Toast(toastLiveExample);
+        toast.show()
+       
+        donem=document.getElementById("DoneM");
+        if(donem){
+        donem.addEventListener('click',modifyitem(item));
+        }
+}
+
+
+function modifyitem(item){
+        console.log("updating List...");
+           t=document.getElementById("TitleM").value;
+           d=document.getElementById("descriptionM").value;
+        //    if(localStorage.getItem('itemsJson')==null){
+        //     itemJsonarr=[];
+        //     itemJsonarr.push([t, d]);
+        //     localStorage.setItem('itemsJson', JSON.stringify(itemJsonarr));
+        //     localStorage.getItem(itemJsonarr);
+        //    }
+        //    else{
+        //     itemJsonstring=localStorage.getItem('itemsJson');
+        //     itemJsonarr=JSON.parse(itemJsonstring);
+        //     itemJsonarr.push([t,d]);
+        //     localStorage.setItem('itemsJson', JSON.stringify(itemJsonarr));
+        //    }
+        //     update();
+        ourarr=[t,d];
+        
+        itemJsonstring=localStorage.getItem('itemsJson');
+        itemJsonarr=JSON.parse(itemJsonstring);
+
+        // itemJsonarr.splice(item,1);
+        itemJsonarr[item]=ourarr;
+        
+        // update();
+
+        }       
+
+    </script>
+  </body>
+</html>
